@@ -2,6 +2,11 @@ var expect = require("chai").expect;
 var sinon = require("sinon");
 var Gun = require('../lib/gun').Gun;
 
+var clock;
+
+before(function () { clock = sinon.useFakeTimers(); });
+after(function () { clock.restore(); });
+
 describe('A gun', function(){
   describe('by default', function(){
     it("should have 5 bullets", function() {
@@ -20,6 +25,15 @@ describe('A gun', function(){
       var gun = new Gun(1);
       gun.fire();
       expect(gun.numberOfBullets).to.equal(0);
+    });    
+  });
+
+  describe('reloading', function(){
+    it("should reload after a while", function() {
+      var gun = new Gun(1);
+      gun.fire();
+      clock.tick(3000);
+      expect(gun.numberOfBullets).to.equal(5);
     });    
   });
 
